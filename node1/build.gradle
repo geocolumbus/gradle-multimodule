@@ -18,6 +18,16 @@ node {
     nodeModulesDir = file("${project.projectDir}")
 }
 
+task buildDistribution(type: Copy) {
+    from(project.projectDir) {
+        exclude "build", "build.gradle", ".gradle", "package-lock.json", "settings.gradle"
+    }
+    into "${project.buildDir}/distribution/${project.name}"
+}
+
+build.dependsOn(buildDistribution)
+
+// A bug with the package lock system causes npm not to download local dependencies.
 npmInstall.args = ['--no-package-lock']
 
 build.dependsOn npmInstall

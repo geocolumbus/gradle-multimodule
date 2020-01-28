@@ -18,6 +18,15 @@ node {
     nodeModulesDir = file("${project.projectDir}")
 }
 
+task buildDistribution(type: Copy) {
+    from(project.projectDir) {
+        exclude "build", "build.gradle", ".gradle", "settings.gradle"
+    }
+    into "${project.buildDir}/distribution/${project.name}"
+}
+
+build.dependsOn(buildDistribution)
+
 npmInstall.args = ['--no-package-lock']
 
 build.dependsOn npmInstall

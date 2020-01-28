@@ -15,3 +15,16 @@ task deleteNodeModules(type: Delete) {
 }
 
 clean.dependsOn("deleteNodeModules")
+
+task buildUOD(type: Zip, dependsOn: subprojects.build) {
+    println "UOD: \"${rootProject.name}.zip\" contains project(s): " + subprojects.name
+    subprojects {
+        from("${it.buildDir}/distribution/") {
+            include '**/**'
+        }
+    }
+    archiveFileName = "${rootProject.name}.zip"
+    destinationDirectory = file('./build/distribution')
+}
+
+build.dependsOn('buildUOD')
