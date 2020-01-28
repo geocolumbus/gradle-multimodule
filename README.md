@@ -4,10 +4,15 @@ A simple gradle based node multimodule project
 
 ## Usage
 
-To stay compatible with AWS Lamda, use Gradle 5.6.4 (not 6 or greater).
+### Requirements
+* Node 12 with npx 10
+* Gradle 5.6.4 (as of 1/2020, don't use 6+ because of AWS Lambda issues)
+
+### Install
 
 ```bash
-git clone
+git clone https://github.com/geocolumbus/gradle-multimodule.git
+cd gradle-multimodule
 ./gradlew build
 ```
 
@@ -18,19 +23,43 @@ TODO
 ## How This Was Constructed
 
 ```bash
-mkdir gradle-mml
-cd gradle-mml
+mkdir gradle-multimodule
+cd gradle-mm
 gradle init
+mkdir node1 node2 node3
+cd node 1 && gradle init
 cd ..
-npx express-generator --no-view --force node1
+cd node 2 && gradle init
 cd ..
-npx express-generator --no-view --force node2
+cd node 3 && gradle init
 cd ..
-
 npx express-generator --no-view --force node1
 npx express-generator --no-view --force node2
 npx express-generator --no-view --force node3
 ```
+
+I then added a PORT environment setting to each node express project's start configuration to that node1 ran on 4001, node 2 on 4002 and node 3 and 4003. For example...
+
+```json
+{
+  "name": "node1",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "PORT=4001 node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "morgan": "~1.9.1"
+  }
+}
+```
+
+I removed the ```.gitignore``` files from the node1, node2 and node3 folders. For this project, git is handled at the root level.
+
+I removed the ```gradle.bat``` and ```gradlew``` files from the node1, node2 and node 3 folders. We will run gradle from the root.
 
 ## Reference
 
