@@ -57,9 +57,9 @@ I then added a PORT environment setting to each node express project's start con
 }
 ```
 
-I removed the ```.gitignore``` files from the node1, node2 and node3 folders. For this project, git is handled at the root level.
+I removed the ```.gitignore``` files from the node1, node2 and node3 folders. Git is handled at the root level.
 
-I removed the ```gradle.bat``` and ```gradlew``` files from the node1, node2 and node 3 folders. We will run gradle from the root.
+I removed the ```gradle.bat```, ```gradlew``` and the ```gradle``` folder from the node1, node2 and node 3 folders. We will run gradle from the root.
 
 ## Reference
 
