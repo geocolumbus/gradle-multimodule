@@ -13,12 +13,19 @@ A simple gradle based node multimodule project
 ```bash
 git clone https://github.com/geocolumbus/gradle-multimodule.git
 cd gradle-multimodule
+```
+
+#### Build
+
+```bash
 ./gradlew build
 ```
 
-Run it
+#### Run
 
-TODO
+```bash
+./gradlew run
+```
 
 ## How This Was Constructed
 
