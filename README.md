@@ -61,6 +61,34 @@ I removed the ```.gitignore``` files from the node1, node2 and node3 folders. Gi
 
 I removed the ```gradle.bat```, ```gradlew``` and the ```gradle``` folder from the node1, node2 and node 3 folders. We will run gradle from the root.
 
+I added the modules to ```settings.gradle``` and IntelliJ picked them up.
+```gradle
+rootProject.name = 'gradle-multimodule'
+include 'node1'
+include 'node2'
+include 'node3'
+```
+
+I then added and configured the gradle-node-plugin to the ```settings.gradle``` file of each node project.
+
+See: https://github.com/srs/gradle-node-plugin/blob/master/docs/installing.md
+
+```gradle
+plugins {
+  id "com.moowork.node" version "1.3.1"
+}
+
+node {
+    version = '12.14.1'
+    npmVersion = '6.13.6'
+    distBaseUrl = 'https://nodejs.org/dist'
+    download = true
+    workDir = file("${project.buildDir}/nodejs")
+    npmWorkDir = file("${project.buildDir}/npm")
+    nodeModulesDir = file("${project.projectDir}")
+}
+```
+
 ## Reference
 
 * [Creating New Gradle Builds](https://guides.gradle.org/creating-new-gradle-builds/)

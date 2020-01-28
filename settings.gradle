@@ -7,4 +7,7 @@
  * in the user manual at https://docs.gradle.org/5.6.4/userguide/multi_project_builds.html
  */
 
-rootProject.name = 'gradle-mm1'
+rootProject.name = 'gradle-multimodule'
+include 'node1'
+include 'node2'
+include 'node3'
