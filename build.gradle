@@ -11,7 +11,7 @@ allprojects {
 }
 
 task deleteNodeModules(type: Delete) {
-    delete "node_modules"
+    delete "app/node_modules", "weather-service/node_modules"
 }
 
 clean.dependsOn("deleteNodeModules")

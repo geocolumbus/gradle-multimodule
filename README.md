@@ -29,64 +29,98 @@ cd gradle-multimodule
 
 ## How This Was Constructed
 
+### Lay out the project
+
 * Build the scaffolding of the project
 
   ```bash
   mkdir gradle-multimodule
   cd gradle-mm
   gradle init
-  mkdir node1 node2 node3
-  cd node 1 && gradle init
+  mkdir app weather-service
+  cd app ; gradle init
   cd ..
-  cd node 2 && gradle init
+  cd weather-service ; gradle init
+  # Choose basic, groovy and default name
   cd ..
-  cd node 3 && gradle init
-  cd ..
-  npx express-generator --no-view --force node1
-  cd node1
+  npx express-generator --view=pug --force app
+  cd app
   mkdir src ;  mv app.js src ; mv bin src ; mv public src ; mv routes src
   cd ..
-  npx express-generator --no-view --force node2
-  cd node2
-  mkdir src ;  mv app.js src ; mv bin src ; mv public src ; mv routes src
-  cd ..  
-  npx express-generator --no-view --force node3
-  cd node3
-  mkdir src ;  mv app.js src ; mv bin src ; mv public src ; mv routes src
-  cd ..  
-  mkdir node1/src && 
+  cd weather-service
+  npm init --force
+  mkdir src ; touch src/index.js
+  cd ..
   ```
 
-* Add a PORT environment setting to each node express project's start configuration to that node1 runs on 4001, node 2 on 4002 and node 3 and 4003. For example...
+* Remove unneeded files/folders from the app and weather-service folders. Gradle runs from the root.
+
+  ```cd app ; rm -rf .gitignore gradlew.bat gradlew gradle ; cd ..```
+  
+  ```cd weather-service ; rm -rf .gitignore gradlew.bat gradlew gradle ; cd ..```
+  
+* Add dummy package-lock.json files to each node project. This is due to a bug
+  in gradle-node-plugin that prevents local dependencies being added.
+  
+  ```touch app/package-lock.json ; touch weather-service/package-lock.json```
+
+* Add the node modules to ```settings.gradle``` (IntelliJ should identify them as modules).
+  ```gradle
+  rootProject.name = 'gradle-multimodule'
+  include 'app'
+  include 'weather-service'
+  ```
+
+### Set up the app
+
+* Add a PORT environment setting to the main app project's start configuration so it runs on :4001.
+
+  Edit ```app/package.json``` so it looks like this.
 
   ```json
   {
-    "name": "node1",
-    "version": "0.0.0",
+    "name": "app",
+    "version": "0.0.1",
     "private": true,
     "scripts": {
-      "start": "PORT=4001 node ./bin/www"
+      "start": "PORT=4001 node ./src/bin/www"
     },
     "dependencies": {
       "cookie-parser": "~1.4.4",
       "debug": "~2.6.9",
       "express": "~4.16.1",
-      "morgan": "~1.9.1"
+      "http-errors": "~1.6.3",
+      "morgan": "~1.9.1",
+      "pug": "2.0.0-beta11"
     }
   }
   ```
 
-* Remove the ```.gitignore``` files from the node1, node2 and node3 folders. Git is handled at the root level.
+### Set up the weather-service
 
-* Remove the ```gradle.bat```, ```gradlew``` and the ```gradle``` folder from the node1, node2 and node 3 folders. Gradle runs from the root.
+* Add this to the ```weather-service/src/index.js```
 
-* Add the node modules to ```settings.gradle``` (IntelliJ should identify them as modules).
-  ```gradle
-  rootProject.name = 'gradle-multimodule'
-  include 'node1'
-  include 'node2'
-  include 'node3'
+  ```javascript
+  const axios = require("axios")
+  
+  const _getWeather = async function (weatherStation) {
+      weatherStation = weatherStation ? weatherStation : "KOSU"
+      let result = ""
+      const weatherResponse = await axios.get(`https://w1.weather.gov/xml/current_obs/${weatherStation}.xml`)
+      try {
+          let location = (weatherResponse.data.match(/\<location\>(.*)\<\/location\>/))[1]
+          let temperature = (weatherResponse.data.match(/\<temperature_string\>(.*)\<\/temperature_string\>/))[1]
+          result += weatherStation + " - " + location + " - " + temperature
+      } catch (e) {
+          result += e
+      }
+      return result
+  }
+
+  exports.getWeather = _getWeather
   ```
+
+### Configure the gradle build
 
 * Add the gradle-node-plugin to the ```settings.gradle``` file of each node project.
 
@@ -133,7 +167,7 @@ cd gradle-multimodule
   build.dependsOn('buildUOD')
   ```
 
-  Add this to the subproject gradle.build files.
+  Add this to the subproject gradle.build files so that a subproject distribution is built.
   
   ```gradle
   task buildDistribution(type: Copy) {
