@@ -1,6 +1,31 @@
 # Gradle Simple Multimodule Project
 
-A simple gradle based node multimodule project
+A simple gradle based node multimodule project. The "app" module is a simple node express web app, and the "weather-service" module has a dependency that gets the weather for a specified weather station. When executed, the app displays the weather at localhost:4001.
+
+The purpose was to demonstrate how to arrange node dependency relationships into a UOD, or Unit of Deployment. The UDO is a zip file that when expaneded, contains the multiple node projects and their dependencies in a zipped up build folder.
+
+```text
+build
+└── distribution
+    └── gradle-multimodule.zip
+```
+
+When expanded, ```gradle-multimodule.zip``` has the code plus the dependencies.
+
+```text
+.
+├── app
+│   ├── node_modules
+│   ├── package-lock.json
+│   ├── package.json
+│   └── src
+└── weather-service
+    ├── node_modules
+    ├── package-lock.json
+    ├── package.json
+    └── src
+
+```
 
 ## Usage
 
