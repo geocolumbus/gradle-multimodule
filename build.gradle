@@ -14,7 +14,7 @@ task deleteNodeModules(type: Delete) {
     delete "app/node_modules", "weather-service/node_modules"
 }
 
-clean.dependsOn("deleteNodeModules")
+clean.dependsOn deleteNodeModules
 
 task buildUOD(type: Zip, dependsOn: subprojects.build) {
     println "UOD: \"${rootProject.name}.zip\" contains project(s): " + subprojects.name
@@ -27,4 +27,4 @@ task buildUOD(type: Zip, dependsOn: subprojects.build) {
     destinationDirectory = file('./build/distribution')
 }
 
-build.dependsOn('buildUOD')
+build.dependsOn buildUOD

@@ -122,6 +122,8 @@ cd gradle-multimodule
 
 ### Configure the gradle build
 
+#### Sub project gradle.build files
+
 * Add the gradle-node-plugin to the ```settings.gradle``` file of each node project.
 
   See: https://github.com/srs/gradle-node-plugin/blob/master/docs/installing.md
@@ -159,6 +161,24 @@ cd gradle-multimodule
   build.dependsOn buildDistribution
   ```
   
+#### Root project gradle.build 
+
+* Configure the root ```gradle.build``` to work with IntelliJ, install the default tasks (base) and add a custom task that removes the node_modules from the subprojects when a clean task is executed.
+
+  ```gradle
+  apply plugin: "idea"
+  
+  allprojects {
+      apply plugin: "base"
+  }
+  
+  task deleteNodeModules(type: Delete) {
+      delete "app/node_modules", "weather-service/node_modules"
+  }
+  
+  clean.dependsOn deleteNodeModules 
+  ```
+  
 * Install code to build the UOD (Unit of Deployment) in the root ```gradle.build``` file.
 
   ```gradle
@@ -173,7 +193,7 @@ cd gradle-multimodule
       destinationDirectory = file('./build/distribution')
   }
 
-  build.dependsOn('buildUOD')
+  build.dependsOn buildUOD
   ```
 
 ## Reference
