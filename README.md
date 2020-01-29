@@ -144,14 +144,23 @@ cd gradle-multimodule
   // A bug with the package lock system causes npm not to download
   // local dependencies.
   npmInstall.args = ['--no-package-lock']
-
-  build.dependsOn npmInstall
+  ```            
+  Now add code to build the distribution to each node module.
+    
+  ```gradle
+  task buildDistribution(type: Copy) {
+      from(project.projectDir) {
+          exclude "build", "build.gradle", ".gradle", "settings.gradle"
+      }
+      into "${project.buildDir}/distribution/${project.name}"
+  }
+    
+  buildDistribution.dependsOn npmInstall
+  build.dependsOn buildDistribution
   ```
   
-* Install the unit of deployment
+* Install code to build the UOD (Unit of Deployment) in the root ```gradle.build``` file.
 
-  Add this to the main project gradle.build file.
-  
   ```gradle
   task buildUOD(type: Zip, dependsOn: subprojects.build) {
       println "UOD: \"${rootProject.name}.zip\" contains project(s): " + subprojects.name
@@ -165,19 +174,6 @@ cd gradle-multimodule
   }
 
   build.dependsOn('buildUOD')
-  ```
-
-  Add this to the subproject gradle.build files so that a subproject distribution is built.
-  
-  ```gradle
-  task buildDistribution(type: Copy) {
-      from(project.projectDir) {
-          exclude "build", "build.gradle", ".gradle", "settings.gradle"
-      }
-      into "${project.buildDir}/distribution/${project.name}"
-  }
-  
-  build.dependsOn(buildDistribution)
   ```
 
 ## Reference
