@@ -43,7 +43,7 @@ cd gradle-multimodule
 #### Build
 
 ```bash
-./gradlew build
+./gradlew clean build
 ```
 
 #### Run Locally
