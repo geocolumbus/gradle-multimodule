@@ -21,10 +21,10 @@ cd gradle-multimodule
 ./gradlew build
 ```
 
-#### Run
+#### Run Locally
 
 ```bash
-./gradlew run
+./run-local.sh
 ```
 
 ## How This Was Constructed
